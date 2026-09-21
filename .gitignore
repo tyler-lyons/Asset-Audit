@@ -1,0 +1,13 @@
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated Asset Audit reports
+/reports/
+
+# macOS metadata
+.DS_Store
