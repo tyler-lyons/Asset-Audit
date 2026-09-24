@@ -1,6 +1,8 @@
 import platform
 import psutil
 
+from windows_disk_info import get_windows_physical_disks
+from windows_software import get_windows_software
 from platform_utils import is_macos, is_windows
 from disk_info import get_physical_disks, get_physical_disk_info
 from software import get_reportable_software
@@ -30,10 +32,9 @@ def build_audit():
         software = get_reportable_software()
   
     elif is_windows():
-        # Windows collectors will be added in the next phase.
-        physical_disks = []
-        storage = []
-        software = []
+        physical_disks = get_windows_physical_disks()
+        storage = get_reportable_storage()
+        software = get_windows_software()
 
     audit = {
         "system": {

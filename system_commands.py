@@ -1,3 +1,4 @@
+import platform
 import subprocess
 
 from platform_utils import is_macos, is_windows
@@ -105,16 +106,15 @@ def get_computer_name():
             ["scutil", "--get", "ComputerName"]
         )
 
-    elif is_windows():
-        output = run_command([
-            "powershell",
-            "-NoProfule",
-            "-Command",
-            "$env:COMPUTERNAME"
-        ])
+        if output.startswith("Command"):
+            return "Unknown"
 
-    else:
-        return "Unknown"
+        return output
+
+    elif is_windows():
+        return platform.node()
+    
+    return "Unknown"
 
     if output.startswith("Command"):
         return "Unknown"
