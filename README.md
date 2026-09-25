@@ -335,7 +335,7 @@ A healthy audit should normally contain:
 
 JSON, CSV, and HTML report generation use shared report error handling.
 
-IF a report cannot be created because of a filesystem or data error, the command-line interface displays a controlled error instead of an unhandled Python traceback.
+If a report cannot be created because of a filesystem or data error, the command-line interface displays a controlled error instead of an unhandled Python traceback.
 
 The CLI uses process exit codes to indicate execution status:
 
