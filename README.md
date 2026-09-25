@@ -55,6 +55,27 @@ Tested on:
 - Intex x86-64 architecture
 
 
+## Screenshots
+
+### macOS HTML Report
+
+![macOS HTML Asset Audit Report](screenshots/macos-html-report.png)
+
+### Windows HTML Report
+
+![Windows HTML Asset Audit Report](screenshots/windows-html-report.png)
+
+### Terminal
+
+#### macOS
+
+![macOS Terminal Asset Audit](screenshots/macos-terminal-audit.png)
+
+#### Windows
+
+![Windows Terminal Asset Audit](screenshots/windows-terminal-audit.png)
+
+
 ## Architecture
 
 The Asset Audit Tool uses platform-specific collectors to gather system information from macOS and Windows, then normalizes the results into a shared Python data structure.
