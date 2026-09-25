@@ -4,6 +4,7 @@ from audit import build_audit
 from csv_report import save_csv_reports
 from html_report import save_html_report
 from json_report import save_json_report
+from report_utils import ReportGenerationError
 
 def print_report(audit):
     print("=" * 50)
@@ -82,24 +83,31 @@ def main():
 
     audit = build_audit()
 
-    if args.format == "terminal":
-        print_report(audit)
+    try:
+        if args.format == "terminal":
+            print_report(audit)
 
-    elif args.format == "json":
-        json_path = save_json_report(audit)
-        print(f"JSON Report: {json_path}")
+        elif args.format == "json":
+            json_path = save_json_report(audit)
+            print(f"JSON Report: {json_path}")
 
-    elif args.format == "csv":
-        csv_paths = save_csv_reports(audit)
+        elif args.format == "csv":
+            csv_paths = save_csv_reports(audit)
 
-        print("CSV Reports:")
+            print("CSV Reports:")
 
-        for path in csv_paths:
-            print(f"  {path}")
+            for path in csv_paths:
+                print(f"  {path}")
 
-    elif args.format=="html":
-        html_path = save_html_report(audit)
-        print(f"HTML Report: {html_path}")
+        elif args.format=="html":
+            html_path = save_html_report(audit)
+            print(f"HTML Report: {html_path}")
+
+    except ReportGenerationError as error:
+        print(f"\nReport Error: {error}")
+        return 1
+
+    return 0
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

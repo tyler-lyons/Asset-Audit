@@ -1,7 +1,9 @@
 import csv
 from pathlib import Path
 
-def save_csv_reports(audit):
+from report_utils import ReportGenerationError
+
+def _save_csv_reports(audit):
     reports_dir = Path("reports")
     reports_dir.mkdir(exist_ok=True)
 
@@ -82,6 +84,19 @@ def save_csv_reports(audit):
         writer.writeheader()
         writer.writerows(audit["software"])
 
-    return system_path, disks_path, storage_path, software_path
+    return (
+        system_path,
+        disks_path,
+        storage_path,
+        software_path
+   )
 
 
+def save_csv_reports(audit):
+    try:
+        return _save_csv_reports(audit)
+
+    except (OSError, csv.Error, TypeError, ValueError) as error:
+        raise ReportGenerationError(
+           f"Unable to create CSV reports: {error}"
+        ) from error

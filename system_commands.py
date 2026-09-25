@@ -9,17 +9,25 @@ def run_command(command):
             command,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=30,
+            errors="replace"
         )
 
         return result.stdout.strip()
 
+    except subprocess.TimeoutExpired:
+        return "Command failed: timed out after 30 seconds"
+
     except subprocess.CalledProcessError as error:
-        return f"Command failed: {error}"
+        message = error.stderr.strip() if error.stderr else str(error)
+        return f"Command failed: {message}"
 
     except FileNotFoundError:
         return f"Command not found: {command[0]}"
 
+    except OSError as error:
+        return f"Command failed: {command[0]}"
 
 def get_cpu_model():
     if is_macos():

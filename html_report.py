@@ -1,6 +1,9 @@
 from datetime import datetime
 from pathlib import Path
 
+from report_utils import ReportGenerationError
+
+
 def get_smart_status_class(status):
     if not status:
         return "status-unknown"
@@ -18,7 +21,7 @@ def get_smart_status_class(status):
 
     return "status-unknown"
 
-def save_html_report(audit, filename="asset_audit.html"):
+def _save_html_report(audit, filename="asset_audit.html"):
     reports_dir = Path("Reports")
     reports_dir.mkdir(exist_ok=True)
 
@@ -447,3 +450,13 @@ def save_html_report(audit, filename="asset_audit.html"):
         file.write(html)
 
     return output_path
+
+
+def save_html_report(audit, filename="asset_audit.html"):
+    try:
+        return _save_html_report(audit, filename)
+
+    except (OSError, TypeError, ValueError) as error:
+        raise ReportGenerationError(
+            f"Unable to create HTML report: {error}"
+        ) from error

@@ -13,6 +13,26 @@ from system_commands import (
     get_os_info,
 )
 
+def safe_collect(label, collector, default, errors):
+    try:
+        return collector()
+
+    except Exception as error:
+        errors.append(
+            f"{label}: {type(error).__name__}: {error}"
+        )
+
+        return default
+
+def get_macos_physical_disks():
+    disks = []
+
+    for device in get_physical_disks():
+        disks.append(
+           get_physical_disk_info(device)
+        )
+
+    return disks
 
 def build_audit():
     os_info = get_os_info()
@@ -21,20 +41,51 @@ def build_audit():
     physical_disks = []
     storage = []
     software = []
+    errors = []
 
     if is_macos():
-        for device in get_physical_disks():
-            physical_disks.append(
-                get_physical_disk_info(device)
-            )
+        physical_disks = safe_collect(
+            "Physical disk inventory",
+            get_macos_physical_disks,
+            [],
+            errors
+        )
 
-        storage = get_reportable_storage()
-        software = get_reportable_software()
+        storage = safe_collect(
+            "Storage inventory",
+            get_reportable_storage,
+            [],
+            errors
+        )
+
+        software = safe_collect(
+            "Software inventory",
+            get_reportable_software,
+            [],
+            errors
+        )
   
     elif is_windows():
-        physical_disks = get_windows_physical_disks()
-        storage = get_reportable_storage()
-        software = get_windows_software()
+        physical_disks = safe_collect(
+            "Physical disk inventory",
+            get_windows_physical_disks,
+            [],
+            errors
+        )
+
+        storage = safe_collect(
+            "Storage inventory",
+            get_reportable_storage,
+            [],
+            errors
+        )
+
+        software = safe_collect(
+            "Software inventory",
+            get_windows_software,
+            [],
+            errors
+        )
 
     audit = {
         "system": {
@@ -58,10 +109,9 @@ def build_audit():
         },
 
         "physical_disks": physical_disks,
-
         "storage": storage,
-
-        "software": software
+        "software": software,
+        "errors": errors
     }
 
     return audit
